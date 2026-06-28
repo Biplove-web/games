@@ -4,37 +4,32 @@ import random
 import math
 import copy
 
-# Initialize Pygame and Clipboard Engine
 pygame.init()
 
-# Get Device Native Resolution for Fullscreen Setup
 info = pygame.display.Info()
 WIDTH, HEIGHT = info.current_w, info.current_h
 BOARD_SIZE = min(WIDTH, HEIGHT)
 SQUARE_SIZE = BOARD_SIZE // 8
 SIDEBAR_WIDTH = WIDTH - BOARD_SIZE
 
-# --- THE MASTERWORK PALETTE (ULTRA-PREMIUM GOLD & OBSIDIAN) ---
-COLOR_LUXE_DARK = (14, 20, 32)        # Matte Obsidian Midnight Blue
-COLOR_LUXE_DARK_GRAD = (28, 38, 58)   # High Contrast Gradient for Dark Squares
-COLOR_LUXE_GOLD = (200, 150, 24)      # Base Satin Gold
-COLOR_LUXE_GOLD_GRAD = (245, 210, 95)  # Bright Venetian Gold Sheen
-COLOR_ACCENT = (255, 223, 128)        # Bright Burnished Gold Trim
-COLOR_HIGHLIGHT = (46, 125, 96)       # Deep Emerald Jade (Valid Moves)
-COLOR_ALERT = (166, 25, 46)           # Deep Royal Crimson (Check System)
-COLOR_SIDEBAR_START = (7, 10, 18)     # Velvet Black Hole Blue
-COLOR_SIDEBAR_END = (18, 25, 38)      # Shadowed Satin Blue
-COLOR_TEXT_LIGHT = (248, 249, 250)    # Diamond White
-COLOR_TEXT_MUTED = (165, 142, 92)     # Muted Gold-Gray
-COLOR_OVERLAY = (10, 14, 22, 230)     # Semi-transparent modal backplate
+COLOR_LUXE_DARK = (14, 20, 32)        
+COLOR_LUXE_DARK_GRAD = (28, 38, 58)   
+COLOR_LUXE_GOLD = (200, 150, 24)      
+COLOR_LUXE_GOLD_GRAD = (245, 210, 95)  
+COLOR_ACCENT = (255, 223, 128)        
+COLOR_HIGHLIGHT = (46, 125, 96)       
+COLOR_ALERT = (166, 25, 46)           
+COLOR_SIDEBAR_START = (7, 10, 18)     
+COLOR_SIDEBAR_END = (18, 25, 38)      
+COLOR_TEXT_LIGHT = (248, 249, 250)    
+COLOR_TEXT_MUTED = (165, 142, 92)     
+COLOR_OVERLAY = (10, 14, 22, 230)     
 
-# High-Contrast Notation Windows Colors
-COLOR_NOTATION_BG = (245, 245, 242)   # Solid Alabaster White
-COLOR_NOTATION_GOLD = (150, 105, 5)   # Deep Contrast Gold (For White's Moves)
-COLOR_NOTATION_BLACK = (20, 26, 40)   # Deep Charcoal Midnight (For Black's Moves)
-COLOR_NOTATION_INDEX = (120, 125, 135) # Muted Gray Index Numbers
+COLOR_NOTATION_BG = (245, 245, 242)   
+COLOR_NOTATION_GOLD = (150, 105, 5)   
+COLOR_NOTATION_BLACK = (20, 26, 40)   
+COLOR_NOTATION_INDEX = (120, 125, 135) 
 
-# Gradient Tone Maps for Metallic Pieces
 GOLD_BODY_TOP = (255, 225, 120)
 GOLD_BODY_BOT = (175, 120, 10)
 BLACK_BODY_TOP = (58, 64, 78)
@@ -45,7 +40,6 @@ PIECE_BLACK_SHADOW = (10, 12, 16)
 
 PIECE_VALUES = {'p': 10, 'n': 30, 'b': 30, 'r': 50, 'q': 90, 'k': 9000}
 
-# --- LUXURY SERIF TYPOGRAPHY ENGINE ---
 FONT_MAIN = pygame.font.SysFont("georgia", int(BOARD_SIZE * 0.045), bold=True)
 FONT_SUB = pygame.font.SysFont("georgia", int(BOARD_SIZE * 0.022), bold=True)
 FONT_SMALL = pygame.font.SysFont("georgia", int(BOARD_SIZE * 0.017))
@@ -59,15 +53,13 @@ class UltraLuxeChess:
         
         self.board_surface = pygame.Surface((BOARD_SIZE, BOARD_SIZE))
         
-        # Smooth Kinetic Rotation Animation Tracking Matrix
         self.current_angle = 0.0
         self.start_angle = 0.0
         self.target_angle = 0.0
         self.rot_progress = 1.0
         
-        # Spectator Mode Timeline Properties
-        self.spectator_history = []  # Holds every parsed step instruction
-        self.spectator_index = -1    # Current viewing index (-1 means starting board)
+        self.spectator_history = []  
+        self.spectator_index = -1    
         
         self.reset_game_state()
 
@@ -100,7 +92,6 @@ class UltraLuxeChess:
         self.promotion_square = None  
         self.promotion_options = []   
         
-        # Save/Load Window State Engine
         self.save_active = False
         self.load_active = False
         self.save_filename = "royal_match"
@@ -123,7 +114,11 @@ class UltraLuxeChess:
         ranks = ['8', '7', '6', '5', '4', '3', '2', '1']
         
         p_name = piece.upper()
-        p_str = "" if p_name == "P" else p_name
+        
+        if p_name == "P":
+            p_str = files[start[1]] if captured != "-" else ""
+        else:
+            p_str = p_name
         
         if p_name == "K" and abs(start[1] - end[1]) == 2:
             return "O-O" if end[1] == 6 else "O-O-O"
@@ -178,12 +173,11 @@ class UltraLuxeChess:
         for token in tokens:
             if "." in token:
                 parts = token.split(".")
-                if parts[-1]: 
-                    move_tokens.append(parts[-1])
+                if parts[-1].strip(): 
+                    move_tokens.append(parts[-1].strip())
             else:
-                move_tokens.append(token)
+                move_tokens.append(token.strip())
 
-        # Temporary simulation context to generate full visual history frame by frame
         sim_instance = UltraLuxeChess()
         sim_instance.game_mode = "HUMAN"
         
@@ -193,6 +187,7 @@ class UltraLuxeChess:
         ranks = ['8', '7', '6', '5', '4', '3', '2', '1']
 
         for move_str in move_tokens:
+            if not move_str: continue
             start_sq = None
             end_sq = None
             promo_piece = None
@@ -208,16 +203,30 @@ class UltraLuxeChess:
                     if sim_instance.turn == "B": promo_piece = promo_piece.lower()
                     else: promo_piece = promo_piece.upper()
 
+                if len(clean_move) < 2: continue
                 dest_str = clean_move[-2:]
-                end_sq = (ranks.index(dest_str[1]), files.index(dest_str[0]))
+                try:
+                    end_sq = (ranks.index(dest_str[1]), files.index(dest_str[0]))
+                except ValueError:
+                    continue
+                    
                 prefix = clean_move[:-2]
-                target_char = "P" if not prefix else prefix[0]
+                
+                if not prefix:
+                    target_char = "P"
+                elif len(prefix) == 1 and prefix[0].islower():
+                    target_char = "P"
+                else:
+                    target_char = prefix[0].upper()
 
                 for r in range(8):
                     for c in range(8):
                         piece = sim_instance.board[r][c]
                         if piece != "-" and ((sim_instance.turn == "W" and piece.isupper()) or (sim_instance.turn == "B" and piece.islower())):
-                            if piece.upper() == target_char and end_sq in sim_instance.get_legal_moves(r, c):
+                            if piece.upper() == target_char and end_sq in sim_instance.get_legal_moves(r, c, sim_instance.board):
+                                if target_char == "P" and len(prefix) == 1:
+                                    if c != files.index(prefix[0]):
+                                        continue
                                 start_sq = (r, c)
                                 break
                     if start_sq: break
@@ -246,8 +255,7 @@ class UltraLuxeChess:
 
                 if promo_piece:
                     sim_instance.board[er][ec] = promo_piece
-                    move_str_with_promo = move_str if "=" in move_str else f"{move_str}={promo_piece.upper()}"
-                    sim_instance.move_history.append(move_str_with_promo)
+                    sim_instance.move_history.append(move_str if "=" in move_str else f"{move_str}={promo_piece.upper()}")
                 else:
                     sim_instance.move_history.append(move_str)
 
@@ -261,7 +269,6 @@ class UltraLuxeChess:
                 sim_instance.turn = "B" if sim_instance.turn == "W" else "W"
                 sim_instance.evaluate_endgame_state()
                 
-                # Append snapshot state frame to history stack
                 self.spectator_history.append({
                     "board": copy.deepcopy(sim_instance.board),
                     "turn": sim_instance.turn,
@@ -275,13 +282,11 @@ class UltraLuxeChess:
                 self.load_active = False
                 return
 
-        # Initialize Spectator Mode view state frame configurations
         if self.game_mode == "WATCH":
             self.reset_game_state()
             self.spectator_index = -1
             self.status_message = "Loaded! Use [LEFT/RIGHT ARROWS] to spectate."
         else:
-            # Interactive loaded configuration fallback fallback
             if self.spectator_history:
                 final_state = self.spectator_history[-1]
                 self.board = final_state["board"]
@@ -697,12 +702,12 @@ class UltraLuxeChess:
 
         pygame.draw.rect(self.screen, COLOR_LUXE_DARK, (pad_x, int(HEIGHT * 0.77), content_w, int(HEIGHT * 0.18)), border_radius=6)
         if self.game_mode == "WATCH":
-            self.screen.blit(FONT_SMALL.render("[←] ➔ Review Previous Move Status", True, COLOR_HIGHLIGHT), (pad_x + 15, int(HEIGHT * 0.79)))
-            self.screen.blit(FONT_SMALL.render("[→] ➔ Advance Timeline Step", True, COLOR_HIGHLIGHT), (pad_x + 15, int(HEIGHT * 0.83)))
+            self.screen.blit(FONT_SMALL.render("[<-] -> Review Previous Move Status", True, COLOR_HIGHLIGHT), (pad_x + 15, int(HEIGHT * 0.79)))
+            self.screen.blit(FONT_SMALL.render("[->] -> Advance Timeline Step", True, COLOR_HIGHLIGHT), (pad_x + 15, int(HEIGHT * 0.83)))
         else:
-            self.screen.blit(FONT_SMALL.render("[S] ➔ Save Match to .chess File", True, COLOR_ACCENT), (pad_x + 15, int(HEIGHT * 0.79)))
-            self.screen.blit(FONT_SMALL.render("[L] ➔ Load Match from .chess File", True, COLOR_HIGHLIGHT), (pad_x + 15, int(HEIGHT * 0.83)))
-        self.screen.blit(FONT_SMALL.render("[ESC] ➔ Main Menu Core", True, COLOR_TEXT_MUTED), (pad_x + 15, int(HEIGHT * 0.87)))
+            self.screen.blit(FONT_SMALL.render("[S] -> Save Match to .chess File", True, COLOR_ACCENT), (pad_x + 15, int(HEIGHT * 0.79)))
+            self.screen.blit(FONT_SMALL.render("[L] -> Load Match from .chess File", True, COLOR_HIGHLIGHT), (pad_x + 15, int(HEIGHT * 0.83)))
+        self.screen.blit(FONT_SMALL.render("[ESC] -> Main Menu Core", True, COLOR_TEXT_MUTED), (pad_x + 15, int(HEIGHT * 0.87)))
 
     def get_king_square(self, color, current_board=None):
         target_board = current_board if current_board is not None else self.board
@@ -795,8 +800,10 @@ class UltraLuxeChess:
     def test_square_safety(self, r, c, is_gold):
         board_copy = copy.deepcopy(self.board)
         king_char = "K" if is_gold else "k"
-        orig_r, orig_c = self.get_king_square("W" if is_gold else "B")
-        board_copy[orig_r][orig_c] = "-"
+        king_sq = self.get_king_square("W" if is_gold else "B")
+        if king_sq:
+            orig_r, orig_c = king_sq
+            board_copy[orig_r][orig_c] = "-"
         board_copy[r][c] = king_char
         return not self.is_in_check("W" if is_gold else "B", board_copy)
 
@@ -938,7 +945,7 @@ class UltraLuxeChess:
             elif self.btn_watch.collidepoint(pos): 
                 self.game_mode = "WATCH"
                 self.reset_game_state()
-                self.load_active = True  # Immediately ask for the file
+                self.load_active = True  
                 self.cursor_blink_time = 0
             return
 
