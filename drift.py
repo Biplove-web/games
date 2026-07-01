@@ -11,18 +11,17 @@ COLOR_GRID = (10, 12, 20)
 COLOR_TRACK = (15, 18, 25)
 COLOR_BORDER = (0, 180, 255)
 
-# Luxury Supercar Color Profile
-COLOR_CAR_MAIN = (10, 12, 16)       # Midnight Black Gloss
-COLOR_CAR_ACCENT = (0, 210, 255)     # Sapphire Neon Blue
-COLOR_CAR_SHADOW = (2, 3, 5)        # Carbon undertones
+COLOR_CAR_MAIN = (10, 12, 16)
+COLOR_CAR_ACCENT = (0, 210, 255)
+COLOR_CAR_SHADOW = (2, 3, 5)
 COLOR_HEADLIGHT = (230, 245, 255)
 COLOR_TAILLIGHT = (255, 0, 85)
 COLOR_GLASS = (0, 80, 150)
 
 COLOR_TRAIL = (0, 150, 255)
 COLOR_TEXT = (210, 220, 240)
-COLOR_TIME_BAR = (0, 255, 130)      # Neon Green for active timer
-COLOR_HUD_BG = (12, 16, 26, 120)    # Translucent dashboard backing
+COLOR_TIME_BAR = (0, 255, 130)
+COLOR_HUD_BG = (12, 16, 26, 120)
 
 class Particle:
     def __init__(self, x, y, color):
@@ -52,7 +51,6 @@ class CyberDriftLuxury:
         pygame.display.set_caption("Cyber Drift Luxury")
         self.clock = pygame.time.Clock()
         
-        # High-end typographic setup
         self.font_title = pygame.font.SysFont("Impact", int(self.width * 0.05))
         self.font_ui = pygame.font.SysFont("Consolas", 28, bold=True)
         self.font_digits = pygame.font.SysFont("Impact", 32)
@@ -77,7 +75,6 @@ class CyberDriftLuxury:
         self.particles = []
         self.is_braking = False
         
-        # Timer Config
         self.max_time = 90.0         
         self.time_left = self.max_time
         self.gameover_reason = "CRITICAL CRASH"
@@ -148,7 +145,6 @@ class CyberDriftLuxury:
 
         keys = pygame.key.get_pressed()
         
-        # Longitudinal Controls
         if keys[pygame.K_UP]:
             self.speed = min(self.max_speed, self.speed + self.accel)
             self.is_braking = False
@@ -161,7 +157,6 @@ class CyberDriftLuxury:
 
         rad = math.radians(self.car_angle)
         
-        # Hybrid Steering Profile (A/D or Left/Right Arrows)
         is_steering = False
         if self.speed > 1:
             turn_factor = 4.6 * (1.0 - (self.speed / (self.max_speed * 1.6)))
@@ -244,13 +239,11 @@ class CyberDriftLuxury:
         cos_a, sin_a = math.cos(rad), math.sin(rad)
         length, width = 44, 20
 
-        # Ground Glow
         glow_amt = int(25 + (self.speed * 2.5))
         glow_surf = pygame.Surface((160, 160), pygame.SRCALPHA)
         pygame.draw.circle(glow_surf, (*COLOR_CAR_ACCENT, glow_amt), (80, 80), 60)
         surface.blit(glow_surf, (int(self.car_x) - 80, int(self.car_y) - 80))
 
-        # Headlight Beams
         hl_len = 160
         hl_surf = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         l_rad, r_rad = math.radians(self.car_angle - 12), math.radians(self.car_angle + 12)
@@ -267,13 +260,11 @@ class CyberDriftLuxury:
             py = self.car_y + length * f_factor * sin_a + width * w_factor * cos_a
             return (px, py)
 
-        # Wheels
         wheels = [get_pt(0.6, 0.9), get_pt(0.6, -0.9), get_pt(-0.4, 0.9), get_pt(-0.4, -0.9)]
         for wx, wy in wheels:
             pygame.draw.circle(surface, (5, 5, 5), (int(wx), int(wy)), 8)
             pygame.draw.circle(surface, COLOR_CAR_ACCENT, (int(wx), int(wy)), 6, 2)
 
-        # Chassis Shells
         chassis_poly = [get_pt(1.0, 0.0), get_pt(0.8, 0.7), get_pt(0.1, 0.8), get_pt(-0.6, 0.9), 
                         get_pt(-0.7, 0.0), get_pt(-0.6, -0.9), get_pt(0.1, -0.8), get_pt(0.8, -0.7)]
         pygame.draw.polygon(surface, COLOR_CAR_MAIN, chassis_poly)
@@ -283,7 +274,6 @@ class CyberDriftLuxury:
         pygame.draw.polygon(surface, COLOR_CAR_SHADOW, core_poly)
         pygame.draw.polygon(surface, COLOR_CAR_ACCENT, chassis_poly, 2)
 
-        # Canopy Windows
         canopy = [get_pt(0.3, 0.0), get_pt(0.1, 0.45), get_pt(-0.25, 0.5), get_pt(-0.35, 0.0), get_pt(-0.25, -0.5), get_pt(0.1, -0.45)]
         pygame.draw.polygon(surface, COLOR_GLASS, canopy)
         pygame.draw.polygon(surface, (255, 255, 255), canopy, 1)
