@@ -1,26 +1,24 @@
 import tkinter as tk
 import random
 
-# --- CONFIGURATION & PREMIUM STYLING ---
-CELL_SIZE = 35  # Clean sizing for modern displays
+CELL_SIZE = 35 
 COLS = 10
 ROWS = 20
 
-# Premium Color Palette (Cyberpunk / Modern Luxury Dark Mode)
-BG_COLOR = "#0D0E15"       # Deep obsidian background
-GRID_COLOR = "#1A1C28"     # Subtle dark grid lines
-PANEL_COLOR = "#161824"    # Background for side panels
-TEXT_COLOR = "#E2E8F0"     # Crisp off-white text
-ACCENT_COLOR = "#6366F1"   # Royal indigo accent
+BG_COLOR = "#0D0E15"       
+GRID_COLOR = "#1A1C28"     
+PANEL_COLOR = "#161824"    
+TEXT_COLOR = "#E2E8F0"     
+ACCENT_COLOR = "#6366F1"   
 
 SHAPE_COLORS = {
-    'I': "#06B6D4",  # Electric Cyan
-    'O': "#EAB308",  # Gold / Amber
-    'T': "#A855F7",  # Deep Purple
-    'S': "#22C55E",  # Emerald Green
-    'Z': "#EF4444",  # Ruby Red
-    'L': "#F97316",  # Tangerine Orange
-    'J': "#3B82F6"   # Sapphire Blue
+    'I': "#06B6D4",  
+    'O': "#EAB308",  
+    'T': "#A855F7",  
+    'S': "#22C55E",  
+    'Z': "#EF4444",  
+    'L': "#F97316",  
+    'J': "#3B82F6"   
 }
 
 SHAPES = {
@@ -40,18 +38,14 @@ class TetraxFullScreen:
         self.root.title("TETRAX // PREMIUM")
         self.root.configure(bg=BG_COLOR)
         
-        # --- FULLSCREEN SETUP ---
         self.root.attributes("-fullscreen", True)
         
-        # Main background container that expands to fill the entire monitor
         self.fs_container = tk.Frame(root, bg=BG_COLOR)
         self.fs_container.pack(expand=True, fill="both")
 
-        # Visual center wrapper so the game stays beautifully centered on any screen size
         self.main_frame = tk.Frame(self.fs_container, bg=BG_COLOR)
         self.main_frame.place(relx=0.5, rely=0.5, anchor="center")
 
-        # Game Board Canvas
         self.canvas = tk.Canvas(
             self.main_frame, 
             width=COLS * CELL_SIZE, 
@@ -62,29 +56,24 @@ class TetraxFullScreen:
         )
         self.canvas.grid(row=0, column=0, rowspan=2, padx=(0, 30))
 
-        # Side Panel for Stats & Next Piece
         self.side_panel = tk.Frame(self.main_frame, bg=PANEL_COLOR, bd=1, relief="flat", padx=20, pady=20)
         self.side_panel.grid(row=0, column=1, sticky="n")
 
-        # Score Display
         self.score_title = tk.Label(self.side_panel, text="SCORE", font=("Helvetica", 10, "bold"), bg=PANEL_COLOR, fg=ACCENT_COLOR)
         self.score_title.pack(anchor="w", pady=(0, 2))
         self.score_label = tk.Label(self.side_panel, text="000000", font=("Consolas", 22, "bold"), bg=PANEL_COLOR, fg=TEXT_COLOR)
         self.score_label.pack(anchor="w", pady=(0, 25))
 
-        # Lines Cleared Display
         self.lines_title = tk.Label(self.side_panel, text="LINES", font=("Helvetica", 10, "bold"), bg=PANEL_COLOR, fg=ACCENT_COLOR)
         self.lines_title.pack(anchor="w", pady=(0, 2))
         self.lines_label = tk.Label(self.side_panel, text="0", font=("Consolas", 20, "bold"), bg=PANEL_COLOR, fg=TEXT_COLOR)
         self.lines_label.pack(anchor="w", pady=(0, 25))
 
-        # Next Piece Canvas Preview
         self.next_title = tk.Label(self.side_panel, text="NEXT", font=("Helvetica", 10, "bold"), bg=PANEL_COLOR, fg=ACCENT_COLOR)
         self.next_title.pack(anchor="w", pady=(0, 5))
         self.next_canvas = tk.Canvas(self.side_panel, width=120, height=120, bg=BG_COLOR, highlightthickness=0)
         self.next_canvas.pack(pady=(0, 10))
 
-        # Controls Hint Footer
         self.controls_label = tk.Label(
             self.main_frame, 
             text="← → Move  •  ↑ Rotate  •  ↓ Drop  •  Enter Restart  •  Esc Exit", 
@@ -94,15 +83,13 @@ class TetraxFullScreen:
         )
         self.controls_label.grid(row=2, column=0, columnspan=2, pady=(25, 0))
 
-        # --- CONTROLS BINDING ---
         self.root.bind("<Left>", lambda e: self.move(-1))
         self.root.bind("<Right>", lambda e: self.move(1))
         self.root.bind("<Down>", lambda e: self.drop())
         self.root.bind("<Up>", lambda e: self.rotate())
         self.root.bind("<Return>", lambda e: self.reset_game())
-        self.root.bind("<Escape>", lambda e: self.root.destroy())  # Smooth window closing
+        self.root.bind("<Escape>", lambda e: self.root.destroy()) 
 
-        # Initialize Game State variables
         self.next_shape_type = random.choice(list(SHAPES.keys()))
         self.reset_game()
         self.update_loop()
@@ -155,7 +142,6 @@ class TetraxFullScreen:
     def draw_game(self):
         self.canvas.delete("all")
 
-        # Structural background grid
         for r in range(ROWS):
             for c in range(COLS):
                 self.canvas.create_rectangle(
@@ -164,20 +150,17 @@ class TetraxFullScreen:
                     outline=GRID_COLOR, width=1
                 )
 
-        # Locked Blocks
         for r in range(ROWS):
             for c in range(COLS):
                 if self.board[r][c]:
                     self.draw_block(c, r, self.board[r][c])
 
-        # Active Falling Block
         if not self.game_over and self.current_shape:
             for r, row in enumerate(self.current_shape):
                 for c, val in enumerate(row):
                     if val:
                         self.draw_block(self.shape_col + c, self.shape_row + r, self.current_color)
 
-        # Premium Game Over Overlay
         if self.game_over:
             self.canvas.create_rectangle(
                 0, 0, COLS * CELL_SIZE, ROWS * CELL_SIZE, 
