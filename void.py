@@ -6,16 +6,15 @@ import math
 pygame.init()
 pygame.font.init()
 
-# Classic Retro-Futurism Color Palette (Vintage Vector / CRT Space Style)
-COLOR_BG = (12, 10, 15)           # Deep Velvet Space Black
-COLOR_GRID = (30, 24, 35)         # Subtle Stellar Grid Lines
-COLOR_SUN = (255, 110, 0)         # Vintage Solar Amber
-COLOR_SUN_CORE = (255, 200, 50)    # Incandescent Yellow Core
-COLOR_SHIP = (240, 238, 230)       # Matte Cream / Apollo White
-COLOR_PANEL_BG = (20, 16, 24, 200) # Heavy CRT Glass Backing
-COLOR_TEXT_AMBER = (255, 160, 0)   # Classic Vector HUD Amber
-COLOR_TEXT_DIM = (160, 100, 0)     # Dimmed Telemetry Text
-COLOR_BOOST = (0, 200, 255)        # Electric Blue Ion Exhaust
+COLOR_BG = (12, 10, 15)           
+COLOR_GRID = (30, 24, 35)         
+COLOR_SUN = (255, 110, 0)         
+COLOR_SUN_CORE = (255, 200, 50)    
+COLOR_SHIP = (240, 238, 230)       
+COLOR_PANEL_BG = (20, 16, 24, 200) 
+COLOR_TEXT_AMBER = (255, 160, 0)   
+COLOR_TEXT_DIM = (160, 100, 0)     
+COLOR_BOOST = (0, 200, 255)        
 
 class SolarFlare:
     def __init__(self, center_x, center_y):
@@ -43,7 +42,6 @@ class VoidRunnerClassic:
         pygame.display.set_caption("Void Runner: Event Horizon")
         self.clock = pygame.time.Clock()
         
-        # Swapped to a standard monospaced font family for uniform character widths
         self.font_title = pygame.font.SysFont("Courier", int(self.width * 0.04), bold=True)
         self.font_ui = pygame.font.SysFont("Courier", 15, bold=True)
         self.font_digits = pygame.font.SysFont("Courier", 24, bold=True)
@@ -133,14 +131,12 @@ class VoidRunnerClassic:
                     self.state = "GAMEOVER"
 
     def draw_classic_hud(self):
-        # Expanded layout width to eliminate overlap constraints completely
         hud_w, hud_h = 480, 160
         hud_canvas = pygame.Surface((hud_w, hud_h), pygame.SRCALPHA)
         
         pygame.draw.rect(hud_canvas, COLOR_PANEL_BG, (0, 0, hud_w, hud_h))
         pygame.draw.rect(hud_canvas, COLOR_TEXT_AMBER, (0, 0, hud_w, hud_h), 2)
         
-        # Text Construction
         lbl_score = self.font_ui.render("HARVEST MATRIX", True, COLOR_TEXT_DIM)
         val_score = self.font_digits.render(f"{self.score:06} UNT", True, COLOR_TEXT_AMBER)
         lbl_fuel = self.font_ui.render("ION PRESSURE FLUID CORE", True, COLOR_TEXT_DIM)
@@ -149,9 +145,8 @@ class VoidRunnerClassic:
         status_txt = "SAFE HORIZON" if self.orbit_radius > 140 else "GRAV CRIT"
         txt_status = self.font_ui.render(status_txt, True, COLOR_TEXT_AMBER if status_txt == "SAFE HORIZON" else COLOR_SUN)
         
-        # Dynamic Two-Column Layout calculations 
         col1_x = 24
-        col2_x = hud_w - 180  # Anchor right-side variables to a strict right-hand column margin
+        col2_x = hud_w - 180  
         
         hud_canvas.blit(lbl_score, (col1_x, 18))
         hud_canvas.blit(val_score, (col1_x, 38))
@@ -161,7 +156,6 @@ class VoidRunnerClassic:
         
         hud_canvas.blit(lbl_fuel, (col1_x, 88))
         
-        # Bottom Linear Fuel Tank Gauge Bar
         bar_x, bar_y, bar_w, bar_h = 24, 115, hud_w - 48, 16
         pygame.draw.rect(hud_canvas, COLOR_TEXT_DIM, (bar_x, bar_y, bar_w, bar_h), 1)
         
