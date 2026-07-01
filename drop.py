@@ -6,18 +6,17 @@ import math
 pygame.init()
 pygame.font.init()
 
-# Luxury Cyberpunk Color Profile
 COLOR_BG = (3, 4, 7)
 COLOR_GRID = (10, 12, 22)
 COLOR_STRUCT_FLASH = (25, 15, 30)
-COLOR_PANEL = (8, 12, 20, 180)    # Ultra-translucent glass backing
+COLOR_PANEL = (8, 12, 20, 180)    
 COLOR_TEXT = (230, 240, 255)
 COLOR_SUBTEXT = (90, 120, 160)
 
-COLOR_POD_MAIN = (255, 255, 255)    # Platinum Gloss
-COLOR_POD_NEON = (0, 230, 255)      # Sapphire Cyan Core
-COLOR_LASER = (255, 0, 90)          # Ruby Neon Security Grid
-COLOR_PHASE = (140, 0, 255)         # Amethyst Violet Phase Shield
+COLOR_POD_MAIN = (255, 255, 255)    
+COLOR_POD_NEON = (0, 230, 255)      
+COLOR_LASER = (255, 0, 90)          
+COLOR_PHASE = (140, 0, 255)         
 
 class LaserGrid:
     def __init__(self, y, screen_width):
@@ -72,7 +71,7 @@ class VerticalDropGame:
         self.fall_speed = self.base_speed
         self.steer_speed = 9.5
         
-        self.score_float = 0.0  # Precision decimal storage for seamless tracking
+        self.score_float = 0.0  
         self.score = 0
         self.energy = 100.0
         self.max_energy = 100.0
@@ -129,12 +128,9 @@ class VerticalDropGame:
         if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             self.pod_x = min(self.width - self.pod_radius - 55, self.pod_x + self.steer_speed)
 
-        # Dynamic gradual velocity adjustment (maintaining identical progression curve)
         speed_multiplier = 1.0 + (self.score_float / 3500.0)
         self.fall_speed = min(26.0, self.base_speed * speed_multiplier)
         
-        # CONTINUOUS METER DESCENT TRACKING
-        # Fractional conversion of velocity delta to real-time depth meters per frame
         self.score_float += self.fall_speed * 0.06
         self.score = int(self.score_float)
         
