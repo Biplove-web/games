@@ -6,7 +6,6 @@ import math
 pygame.init()
 pygame.font.init()
 
-# Luxury Classic Color Palette
 COLOR_BG = (5, 12, 10)             
 COLOR_GRID = (10, 22, 16)          
 COLOR_BEAM = (230, 205, 150)       
@@ -49,7 +48,6 @@ class Counterweight:
         self.boundary_right = boundary_right
         self.speed = 2.0 if start_dir == "RIGHT" else -2.0
         self.radius = 11
-        # Track the true center for pixel-perfect circular collision checks
         self.center_x = self.x + self.radius
         self.center_y = self.y + self.radius
         self.pulse_anim = random.uniform(0, 6.28)
@@ -70,7 +68,6 @@ class Counterweight:
         cx = int(self.center_x)
         cy = int(self.center_y - camera_y)
         
-        # Purely cosmetic suspension line
         pygame.draw.line(surface, COLOR_GRID, (cx, render_y - 20), (cx, cy), 1)
         pygame.draw.circle(surface, COLOR_BEAM_DARK, (cx, render_y - 20), 2)
 
@@ -267,18 +264,15 @@ class CyberClimbGame:
                 self.hazards.pop(0)
                 self.hazards.pop(0)
 
-        # Player midpoints for accurate circle math
         player_mid_x = self.player_x + (self.player_w / 2)
         player_mid_y = self.player_y + (self.player_h / 2)
 
         for hazard in self.hazards:
             hazard.update() 
             
-            # Find closest point on square player to the circle hazard core
             closest_x = max(self.player_x, min(hazard.center_x, self.player_x + self.player_w))
             closest_y = max(self.player_y, min(hazard.center_y, self.player_y + self.player_h))
             
-            # Calculate actual distance to circle edge
             dist_x = hazard.center_x - closest_x
             dist_y = hazard.center_y - closest_y
             distance_squared = (dist_x ** 2) + (dist_y ** 2)
